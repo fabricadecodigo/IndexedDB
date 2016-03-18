@@ -1,0 +1,39 @@
+<html lang="pt-br">
+<head>
+  <!DOCTYPE html>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="content-language" content="pt-br">
+
+  <title>IndexedDB</title>
+</head>
+<body>
+  <h1>IndexedDB</h1>
+
+
+  <script type="text/javascript" src="js/fabwebsql.js"></script>
+  <script type="text/javascript">
+    window.onload = function() {
+        var request = indexedDB.open("ToDo", 1);
+
+        request.onupgradeneeded = function() {
+          // The database did not previously exist, so create object stores and indexes.
+          var db = request.result;
+          var todoStore = db.createObjectStore("todo", { autoIncrement: true });
+
+          todoStore.transaction.oncomplete = function(event) {
+              var todoTransaction = db.transaction("todo", "readwrite").objectStore("todo");
+
+              todoTransaction.add({ descricao: 'Fazer o artigo', feito: false });
+              todoTransaction.add({ descricao: 'Fazer o artigo', feito: false });
+              todoTransaction.add({ descricao: 'Fazer o artigo', feito: true });
+          }
+        };
+
+        request.onsuccess = function() {
+          db = request.result;
+        };
+    }
+  </script>
+</body>
+</html>
